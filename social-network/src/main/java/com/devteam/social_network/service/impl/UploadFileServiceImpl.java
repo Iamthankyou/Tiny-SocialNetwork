@@ -24,7 +24,7 @@ public class UploadFileServiceImpl implements UploadFileService {
             if (multipartFileList[i].isEmpty()){
                 throw new AppException("APIUF","file not empty");
             }
-        }
+        }   
 
         Path path = Paths.get("upload/");
         for (int i = 0 ; i < multipartFileList.length ; i++){

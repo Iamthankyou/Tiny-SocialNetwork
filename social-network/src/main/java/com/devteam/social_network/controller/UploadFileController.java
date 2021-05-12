@@ -1,5 +1,7 @@
 package com.devteam.social_network.controller;
 
+import com.devteam.social_network.domain.Media;
+import com.devteam.social_network.service.MediaService;
 import com.devteam.social_network.service.UploadFileService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,19 @@ import java.util.List;
 public class UploadFileController {
     @Autowired
     UploadFileService uploadFileService;
+    @Autowired
+    MediaService mediaService;
     @PostMapping("upload-file")
     @ApiOperation("upload-file")
-    public ResponseEntity<List<String>> uploadFile(@RequestParam("files") MultipartFile[] multipartFile){
+    public ResponseEntity<List<String>> uploadFile(@RequestParam("files") MultipartFile[] multipartFile,@RequestParam String type,@RequestParam String caption,@RequestParam Long postId){
+        for (int i = 0 ; i < multipartFile.length ; i++){
+            Media media = new Media();
+            media.setType(type);
+            media.setFileName(multipartFile[i].getOriginalFilename());
+            media.setCaption(caption+"@"+multipartFile[i].getOriginalFilename());
+            media.setPostId(postId);
+            mediaService.save(media);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(uploadFileService.uploadFile(multipartFile));
     }
 
