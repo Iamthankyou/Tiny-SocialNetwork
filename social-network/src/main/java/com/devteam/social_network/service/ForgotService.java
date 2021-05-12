@@ -37,4 +37,10 @@ public class ForgotService {
         customer.setResetPasswordToken(null);
         userRepository.save(customer);
     }
+
+    public void updateActive(User customer, String active) {
+        customer.setIsActive(active);
+        customer.setResetPasswordToken(null);
+        userRepository.save(customer);
+    }
 }

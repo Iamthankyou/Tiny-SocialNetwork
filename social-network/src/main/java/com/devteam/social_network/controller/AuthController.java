@@ -138,8 +138,47 @@ public class AuthController {
 		user.setRoles(roles);
 		userRepository.save(user);
 
+
+		String email = signUpRequest.getEmail();
+		String token = RandomString.make(30);
+
+		try {
+			forgotService.updateResetPasswordToken(token, email);
+			String resetPasswordLink =  "http://localhost:8998/api/auth/active?token=" + token;
+			sendEmailActive(email, resetPasswordLink);
+//			model.addAttribute("message", "");
+
+		} catch (UsernameNotFoundException ex) {
+			return ResponseEntity.ok(new MessageResponse(ex.getMessage()));
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(e.getMessage()));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(e.getMessage()));
+		}
+
+
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
+
+	@GetMapping("/active")
+	public ResponseEntity<?>  showResetPasswordForm(@Param(value = "token") String token){
+		User customer = forgotService.getByResetPasswordToken(token);
+
+		if (customer == null) {
+			return ResponseEntity.ok(new MessageResponse("Not found customer"));
+		}
+
+		try {
+			forgotService.updatePassword(customer,"true");
+		} catch (UsernameNotFoundException ex) {
+			return ResponseEntity.ok(new MessageResponse(ex.getMessage()));
+		}
+
+		return ResponseEntity.ok(new MessageResponse("User activefully !"));
+	}
+
 
 	@PostMapping("/forgot")
 	public ResponseEntity<?> forgotUser(@Valid @RequestBody ForgotRequest forgotRequest) {
@@ -148,7 +187,7 @@ public class AuthController {
 
 		try {
 			forgotService.updateResetPasswordToken(token, email);
-			String resetPasswordLink =  "http://localhost:8998//api/auth/reset_password?token=" + token;
+			String resetPasswordLink =  "http://localhost:8998/api/auth/reset_password?token=" + token;
 			sendEmail(email, resetPasswordLink);
 //			model.addAttribute("message", "");
 
@@ -183,6 +222,30 @@ public class AuthController {
 		}
 
 		return ResponseEntity.ok(new MessageResponse("Change password successfully"));
+	}
+
+	public void sendEmailActive(String recipientEmail, String link) throws MessagingException, UnsupportedEncodingException {
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		helper.setFrom("social@gmail.com", "Social Support");
+		helper.setTo(recipientEmail);
+
+		String subject = "Here's the link to active user";
+
+		String content = "<p>Hello,</p>"
+				+ "<p>Welcome to join SocialMedia </p>"
+				+ "<p>Click the link active user:</p>"
+				+ "<p><a href=\"" + link + "\">ACTIVE</a></p>"
+				+ "<br>"
+				+ "<p>Thank you, "
+				+ "so much.</p>";
+
+		helper.setSubject(subject);
+
+		helper.setText(content, true);
+
+		mailSender.send(message);
 	}
 
 	public void sendEmail(String recipientEmail, String link) throws MessagingException, UnsupportedEncodingException {
