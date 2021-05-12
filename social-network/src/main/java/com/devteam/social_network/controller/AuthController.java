@@ -19,12 +19,14 @@ import com.devteam.social_network.payload.request.NewPassword;
 import com.devteam.social_network.payload.request.SignupRequest;
 import com.devteam.social_network.payload.response.JwtResponse;
 import com.devteam.social_network.payload.response.MessageResponse;
+import com.devteam.social_network.payload.response.UserResponse;
 import com.devteam.social_network.repos.RoleRepository;
 import com.devteam.social_network.repos.UserRepository;
 import com.devteam.social_network.security.jwt.JwtUtils;
 import com.devteam.social_network.security.services.UserDetailsImpl;
 import com.devteam.social_network.service.ForgotService;
 import com.sun.mail.imap.Utility;
+import io.swagger.models.Response;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -171,12 +173,29 @@ public class AuthController {
 		}
 
 		try {
-			forgotService.updatePassword(customer,"true");
+			forgotService.updateActive(customer,"true");
 		} catch (UsernameNotFoundException ex) {
 			return ResponseEntity.ok(new MessageResponse(ex.getMessage()));
 		}
 
 		return ResponseEntity.ok(new MessageResponse("User activefully !"));
+	}
+
+	@PostMapping("/getUserWithEmail")
+	public ResponseEntity<?> getUserWithMail(@Valid @RequestBody ForgotRequest forgotRequest) {
+		String email = forgotRequest.getEmail();
+		User user = userRepository.findByEmail(email);
+
+		return ResponseEntity.ok(new UserResponse(user.getNickName(),user.getEmail(),user.getFirstName(), user.getLastName(), user.getIsActive(), user.getGender()));
+	}
+
+
+	@PostMapping("/getUserWithUserName")
+	public ResponseEntity<?> getUserWithUserName(@Valid @RequestBody UserResponse userResponse) {
+		String username = userResponse.getUsername();
+		User user = userRepository.findByEmail(username);
+
+		return ResponseEntity.ok(new UserResponse(user.getNickName(),user.getEmail(),user.getFirstName(), user.getLastName(), user.getIsActive(), user.getGender()));
 	}
 
 
