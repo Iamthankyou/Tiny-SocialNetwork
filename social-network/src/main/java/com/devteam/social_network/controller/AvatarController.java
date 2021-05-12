@@ -1,6 +1,7 @@
 package com.devteam.social_network.controller;
 
 import com.devteam.social_network.domain.User;
+import com.devteam.social_network.payload.response.MessageResponse;
 import com.devteam.social_network.repos.UserRepository;
 import com.devteam.social_network.service.AvatarService;
 import io.swagger.annotations.ApiOperation;
@@ -28,23 +29,33 @@ public class AvatarController {
 
     @PostMapping("upload-file")
     @ApiOperation("upload-file")
-    public ResponseEntity<List<String>> uploadFile(@RequestParam("files") MultipartFile[] multipartFile,@RequestParam String type,@RequestParam String username){
-        String root = "http://localhost:8998/upload-file-controller/images/";
-        User user = userRepository.findByEmail(username);
-        for (int i = 0 ; i < multipartFile.length ; i++){
-            user.setAvatar(root+multipartFile[i].getOriginalFilename());
+    public ResponseEntity<List<String>> uploadFile(@RequestParam("files") MultipartFile[] multipartFile,@RequestParam String email){
+        String root = "http://localhost:8998/file/images/";
+        User user = userRepository.findByEmail(email);
+
+        if (user != null){
+            for (int i = 0 ; i < multipartFile.length ; i++){
+                user.setAvatar(root+multipartFile[i].getOriginalFilename());
+            }
+
+            userRepository.save(user);
+            return ResponseEntity.status(HttpStatus.OK).body(avatarService.uploadFile(multipartFile));
+
         }
 
-        userRepository.save(user);
+        return ResponseEntity.notFound().build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(avatarService.uploadFile(multipartFile));
     }
 
     @GetMapping("images/{photo}")
     public ResponseEntity<ByteArrayResource> getImage(@PathVariable("photo")String photo){
         if(!photo.equals("") || photo != null){
             try{
-                Path filename = Paths.get("upload",photo);
+                Path path = Paths.get(System.getProperty("user.dir"));
+                path = Paths.get(path.toString(), "../").normalize().resolve("Uploads");
+
+                Path filename = Paths.get(path.toString(),photo);
+                System.out.println(filename);
                 byte[] buffer = Files.readAllBytes(filename);
                 ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
                 return ResponseEntity.ok().contentLength(buffer.length)
