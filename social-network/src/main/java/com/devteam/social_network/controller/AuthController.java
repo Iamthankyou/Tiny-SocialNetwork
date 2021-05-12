@@ -15,6 +15,7 @@ import com.devteam.social_network.domain.Role;
 import com.devteam.social_network.domain.User;
 import com.devteam.social_network.payload.request.ForgotRequest;
 import com.devteam.social_network.payload.request.LoginRequest;
+import com.devteam.social_network.payload.request.NewPassword;
 import com.devteam.social_network.payload.request.SignupRequest;
 import com.devteam.social_network.payload.response.JwtResponse;
 import com.devteam.social_network.payload.response.MessageResponse;
@@ -26,6 +27,7 @@ import com.devteam.social_network.service.ForgotService;
 import com.sun.mail.imap.Utility;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -35,11 +37,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -150,7 +148,7 @@ public class AuthController {
 
 		try {
 			forgotService.updateResetPasswordToken(token, email);
-			String resetPasswordLink =  "http://localhost:8998/reset_password?token=" + token;
+			String resetPasswordLink =  "http://localhost:8998//api/auth/reset_password?token=" + token;
 			sendEmail(email, resetPasswordLink);
 //			model.addAttribute("message", "");
 
@@ -166,6 +164,25 @@ public class AuthController {
 
 		return ResponseEntity.ok(new MessageResponse("Send mail successfully!"));
 
+	}
+
+	@PostMapping("/reset_password")
+	public ResponseEntity<?>  showResetPasswordForm(@Param(value = "token") String token, @Valid @RequestBody NewPassword newPassword) {
+		User customer = forgotService.getByResetPasswordToken(token);
+
+		if (customer == null) {
+			return ResponseEntity.ok(new MessageResponse("Not found customer"));
+		}
+
+		String password = newPassword.getPassword();
+
+		try {
+			forgotService.updatePassword(customer,password);
+		} catch (UsernameNotFoundException ex) {
+			return ResponseEntity.ok(new MessageResponse(ex.getMessage()));
+		}
+
+		return ResponseEntity.ok(new MessageResponse("Change password successfully"));
 	}
 
 	public void sendEmail(String recipientEmail, String link) throws MessagingException, UnsupportedEncodingException {
