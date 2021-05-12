@@ -27,10 +27,11 @@ public class UploadFileController {
     @PostMapping("upload-file")
     @ApiOperation("upload-file")
     public ResponseEntity<List<String>> uploadFile(@RequestParam("files") MultipartFile[] multipartFile,@RequestParam String type,@RequestParam String caption,@RequestParam Long postId){
+        String root = "http://localhost:8998/upload-file-controller/images/";
         for (int i = 0 ; i < multipartFile.length ; i++){
             Media media = new Media();
             media.setType(type);
-            media.setFileName(multipartFile[i].getOriginalFilename());
+            media.setFileName(root+multipartFile[i].getOriginalFilename());
             media.setCaption(caption+"@"+multipartFile[i].getOriginalFilename());
             media.setPostId(postId);
             mediaService.save(media);

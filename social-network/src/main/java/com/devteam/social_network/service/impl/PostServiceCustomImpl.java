@@ -1,10 +1,10 @@
 package com.devteam.social_network.service.impl;
 
 import com.devteam.social_network.common.exception.AppException;
-import com.devteam.social_network.domain.Post;
-import com.devteam.social_network.domain.PostReaction;
+import com.devteam.social_network.domain.*;
 import com.devteam.social_network.repos.PostRepoService;
 import com.devteam.social_network.sdi.PostSdi;
+import com.devteam.social_network.sdo.PagePost;
 import com.devteam.social_network.sdo.PostCustomSdo;
 import com.devteam.social_network.sdo.PostSdo;
 import com.devteam.social_network.service.*;
@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceCustomImpl implements PostServiceCustom {
@@ -31,6 +34,10 @@ public class PostServiceCustomImpl implements PostServiceCustom {
     PostReactionService postReactionService;
     @Autowired
     PostRepoService postRepoService;
+    @Autowired
+    PostCommentService postCommentService;
+    @Autowired
+    LoveService loveService;
     @Override
     public PostSdo post(PostSdi postSdi) {
         if (accountServiceCustom.getAccountByEmail(postSdi.getUserEmail()) == null){
@@ -80,8 +87,22 @@ public class PostServiceCustomImpl implements PostServiceCustom {
     }
 
     @Override
-    public Page<Post> listPostVer2(int pageIndex, int size) {
-        return postService.findAll(PageRequest.of(pageIndex,size));
+    public List<PagePost> listPostVer2(int pageIndex, int size) {
+        List<PagePost> result = new ArrayList<>();
+        List<Post> list = postService.findAll(PageRequest.of(pageIndex,size)).toList();
+        list.forEach(postOut -> {
+            PagePost pagePost = new PagePost();
+            pagePost.setPostId(postOut.getPostId());
+            pagePost.setContent(postOut.getContent());
+            pagePost.setPostDate(postOut.getPostDate());
+            pagePost.setPostTime(postOut.getPostTime());
+            pagePost.setUserEmail(postOut.getUserEmail());
+            pagePost.setListPostComment(postCommentService.findAll().stream().filter(pc -> pc.getPostId() == postOut.getPostId()).collect(Collectors.toList()));
+            pagePost.setListLove(loveService.findAll().stream().filter(l -> l.getPostId() == postOut.getPostId()).collect(Collectors.toList()));
+            pagePost.setListMedia(mediaService.findAll().stream().filter(m -> m.getPostId() == postOut.getPostId()).collect(Collectors.toList()));
+            result.add(pagePost);
+        });
+        return result;
     }
 
 
