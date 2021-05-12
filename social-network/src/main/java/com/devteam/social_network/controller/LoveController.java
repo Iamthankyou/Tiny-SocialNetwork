@@ -27,6 +27,10 @@ public class LoveController {
     @PostMapping("/insert-love")
     @ApiOperation("insert-love")
     public ResponseEntity<Love> insertLove(@RequestBody Love love){
+        if(loveService.findAll().stream().anyMatch(l -> l.getPostId() == love.getPostId()&&l.getUserEmail().equals(love.getUserEmail()))){
+            loveService.delete(love);
+            return ResponseEntity.status(HttpStatus.OK).body(love);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(loveService.save(love));
     }
 

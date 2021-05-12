@@ -119,7 +119,7 @@ public class PostServiceCustomImpl implements PostServiceCustom {
                         return 0;
                     }))
                     .collect(Collectors.toList()));
-            pagePost.setListLove(loveService.findAll().stream().filter(l -> l.getPostId() == postOut.getPostId()).collect(Collectors.toList()));
+            pagePost.setListLove(loveService.findAll().stream().filter(l -> l.getPostId() == postOut.getPostId()).map(l -> l.getUserEmail()).collect(Collectors.toList()));
             pagePost.setListMedia(mediaService.findAll().stream().filter(m -> m.getPostId() == postOut.getPostId()).collect(Collectors.toList()));
             result.add(pagePost);
         });

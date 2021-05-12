@@ -17,7 +17,7 @@ public class PagePost {
     private LocalTime postTime;
     private String userEmail;
     private List<PostComment> listPostComment;
-    private List<Love> listLove;
+    private List<String> listLove;
     private List<Media> listMedia;
     private Long totalPost;
 }
