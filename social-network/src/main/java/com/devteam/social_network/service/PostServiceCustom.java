@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 public interface PostServiceCustom {
 
     public PostSdo post(PostSdi postSdi);
+
+    public void deletePost(Long postId);
     public Page<PostCustomSdo> listPost(Pageable pageable);
 
     public Page<Post> listPostVer2(int pageIndex,int size);

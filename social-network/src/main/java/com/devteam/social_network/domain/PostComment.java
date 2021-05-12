@@ -14,13 +14,12 @@ import java.time.LocalTime;
 public class PostComment {
     @Id
     @Column(name = "POSTID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
-    @Id
-    @Column(name = "COMMENTTIME")
+    //@Id
+    @Column(name = "COMMENTTIME",columnDefinition = "TIME")
     private LocalTime commentTime;
-    @Id
-    @Column(name = "COMMENTDATE")
+    //@Id
+    @Column(name = "COMMENTDATE",columnDefinition = "DATE")
     private LocalDate commentDate;
     @Id
     @Column(name = "USEREMAIL")

@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface PostCommentService extends JpaRepository<PostComment,Long> {
+public interface PostCommentService extends JpaRepository<PostComment,String> {
 }

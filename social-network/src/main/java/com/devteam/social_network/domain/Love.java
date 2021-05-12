@@ -13,7 +13,6 @@ public class Love {
 
     @Id
     @Column(name = "POSTID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
     @Id
     @Column(name = "USEREMAIL")

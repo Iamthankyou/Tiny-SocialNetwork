@@ -9,8 +9,8 @@ import java.time.LocalTime;
 public class PostSdo {
     private Long postId;
     private String content;
-    private LocalDate localDate;
-    private LocalTime localTime;
+    private LocalDate postDate;
+    private LocalTime postTime;
     private String userEmail;
     private String reactionType;
 }

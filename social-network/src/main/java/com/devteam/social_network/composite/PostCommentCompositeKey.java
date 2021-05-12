@@ -6,7 +6,7 @@ import java.time.LocalTime;
 
 public class PostCommentCompositeKey implements Serializable {
     private Long postId;
-    private LocalTime commentTime;
-    private LocalDate commentDate;
+//    private LocalTime commentTime;
+//    private LocalDate commentDate;
     private String userEmail;
 }

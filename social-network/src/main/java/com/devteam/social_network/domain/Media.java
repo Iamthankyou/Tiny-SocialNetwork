@@ -16,7 +16,6 @@ public class Media {
 
     @Id
     @Column(name = "POSTID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
     @Column(name = "TYPE")

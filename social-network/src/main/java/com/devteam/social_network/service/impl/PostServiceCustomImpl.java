@@ -62,11 +62,16 @@ public class PostServiceCustomImpl implements PostServiceCustom {
         PostSdo postSdo = new PostSdo();
         postSdo.setPostId(postOut.getPostId());
         postSdo.setContent(postOut.getContent());
-        postSdo.setLocalDate(postOut.getPostDate());
-        postSdo.setLocalTime(postOut.getPostTime());
+        postSdo.setPostDate(postOut.getPostDate());
+        postSdo.setPostTime(postOut.getPostTime());
         postSdo.setUserEmail(postOut.getUserEmail());
         postSdo.setReactionType(postReactionOut.getReationType());
         return postSdo;
+    }
+
+    @Override
+    public void deletePost(Long postId) {
+        postService.deleteById(postId);
     }
 
     @Override
