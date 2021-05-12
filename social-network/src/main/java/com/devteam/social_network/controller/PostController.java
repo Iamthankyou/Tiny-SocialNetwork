@@ -5,6 +5,7 @@ import com.devteam.social_network.common.annotation.ApiPageable;
 import com.devteam.social_network.domain.Post;
 import com.devteam.social_network.sdi.PostSdi;
 import com.devteam.social_network.sdo.PagePost;
+import com.devteam.social_network.sdo.PageableSdo;
 import com.devteam.social_network.sdo.PostCustomSdo;
 import com.devteam.social_network.sdo.PostSdo;
 import com.devteam.social_network.service.PostServiceCustom;
@@ -40,7 +41,7 @@ public class PostController {
 
     @GetMapping("/list-post-ver2")
     @ApiOperation("list-post-ver2")
-    public ResponseEntity<List<PagePost>> listPostVer2(@RequestParam int pageIndex, @RequestParam int size){
+    public ResponseEntity<PageableSdo> listPostVer2(@RequestParam int pageIndex, @RequestParam int size){
         return ResponseEntity.status(HttpStatus.OK).body(postServiceCustom.listPostVer2(pageIndex,size));
     }
 }

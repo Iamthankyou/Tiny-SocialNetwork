@@ -19,4 +19,5 @@ public class PagePost {
     private List<PostComment> listPostComment;
     private List<Love> listLove;
     private List<Media> listMedia;
+    private Long totalPost;
 }

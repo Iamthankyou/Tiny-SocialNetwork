@@ -5,6 +5,7 @@ import com.devteam.social_network.domain.*;
 import com.devteam.social_network.repos.PostRepoService;
 import com.devteam.social_network.sdi.PostSdi;
 import com.devteam.social_network.sdo.PagePost;
+import com.devteam.social_network.sdo.PageableSdo;
 import com.devteam.social_network.sdo.PostCustomSdo;
 import com.devteam.social_network.sdo.PostSdo;
 import com.devteam.social_network.service.*;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -87,7 +89,8 @@ public class PostServiceCustomImpl implements PostServiceCustom {
     }
 
     @Override
-    public List<PagePost> listPostVer2(int pageIndex, int size) {
+    public PageableSdo listPostVer2(int pageIndex, int size) {
+        PageableSdo pageableSdo = new PageableSdo();
         List<PagePost> result = new ArrayList<>();
         List<Post> list = postService.findAll(PageRequest.of(pageIndex,size)).toList();
         list.forEach(postOut -> {
@@ -97,12 +100,47 @@ public class PostServiceCustomImpl implements PostServiceCustom {
             pagePost.setPostDate(postOut.getPostDate());
             pagePost.setPostTime(postOut.getPostTime());
             pagePost.setUserEmail(postOut.getUserEmail());
-            pagePost.setListPostComment(postCommentService.findAll().stream().filter(pc -> pc.getPostId() == postOut.getPostId()).collect(Collectors.toList()));
+            pagePost.setListPostComment(postCommentService
+                    .findAll().stream()
+                    .filter(pc -> pc.getPostId() == postOut.getPostId())
+                    .sorted(((o1, o2) -> {
+                        if (o1.getCommentDate().isAfter(o2.getCommentDate())){
+                            return -1;
+                        }
+                        if (o1.getCommentDate().isBefore(o2.getCommentDate())){
+                            return 1;
+                        }
+                        if (o1.getCommentTime().isAfter(o2.getCommentTime())){
+                            return -1;
+                        }
+                        if (o1.getCommentTime().isBefore(o2.getCommentTime())){
+                            return 1;
+                        }
+                        return 0;
+                    }))
+                    .collect(Collectors.toList()));
             pagePost.setListLove(loveService.findAll().stream().filter(l -> l.getPostId() == postOut.getPostId()).collect(Collectors.toList()));
             pagePost.setListMedia(mediaService.findAll().stream().filter(m -> m.getPostId() == postOut.getPostId()).collect(Collectors.toList()));
             result.add(pagePost);
         });
-        return result;
+        result.sort((o1, o2) -> {
+            if (o1.getPostDate().isAfter(o2.getPostDate())){
+                return -1;
+            }
+            if (o1.getPostDate().isBefore(o2.getPostDate())){
+                return 1;
+            }
+            if (o1.getPostTime().isAfter(o2.getPostTime())){
+                return -1;
+            }
+            if (o1.getPostTime().isBefore(o2.getPostTime())){
+                return 1;
+            }
+            return 0;
+        });
+        pageableSdo.setListPagePost(result);
+        pageableSdo.setTotalPost(postService.findAll().stream().count());
+        return pageableSdo;
     }
 
 
