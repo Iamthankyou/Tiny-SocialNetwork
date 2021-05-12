@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
@@ -92,7 +93,7 @@ public class PostServiceCustomImpl implements PostServiceCustom {
     public PageableSdo listPostVer2(int pageIndex, int size) {
         PageableSdo pageableSdo = new PageableSdo();
         List<PagePost> result = new ArrayList<>();
-        List<Post> list = postService.findAll(PageRequest.of(pageIndex,size)).toList();
+        List<Post> list = postService.findAll(PageRequest.of(pageIndex,size,Sort.by("postDate").descending().and(Sort.by("postTime")))).toList();
         list.forEach(postOut -> {
             PagePost pagePost = new PagePost();
             pagePost.setPostId(postOut.getPostId());

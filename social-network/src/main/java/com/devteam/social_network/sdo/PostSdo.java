@@ -17,5 +17,4 @@ public class PostSdo {
     private LocalTime postTime;
     private String userEmail;
     private String reactionType;
-    private List<PostComment> listPostComment;
 }
