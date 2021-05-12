@@ -1,15 +1,19 @@
 package com.devteam.social_network.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 
 import com.devteam.social_network.domain.ERole;
 import com.devteam.social_network.domain.Role;
 import com.devteam.social_network.domain.User;
+import com.devteam.social_network.payload.request.ForgotRequest;
 import com.devteam.social_network.payload.request.LoginRequest;
 import com.devteam.social_network.payload.request.SignupRequest;
 import com.devteam.social_network.payload.response.JwtResponse;
@@ -18,12 +22,18 @@ import com.devteam.social_network.repos.RoleRepository;
 import com.devteam.social_network.repos.UserRepository;
 import com.devteam.social_network.security.jwt.JwtUtils;
 import com.devteam.social_network.security.services.UserDetailsImpl;
+import com.devteam.social_network.service.ForgotService;
+import com.sun.mail.imap.Utility;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +46,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+	@Autowired
+	private JavaMailSender mailSender;
+
+	@Autowired
+	private ForgotService forgotService;
+
 	@Autowired
 	AuthenticationManager authenticationManager;
 
@@ -125,5 +141,54 @@ public class AuthController {
 		userRepository.save(user);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+	}
+
+	@PostMapping("/forgot")
+	public ResponseEntity<?> forgotUser(@Valid @RequestBody ForgotRequest forgotRequest) {
+		String email = forgotRequest.getEmail();
+		String token = RandomString.make(30);
+
+		try {
+			forgotService.updateResetPasswordToken(token, email);
+			String resetPasswordLink =  "http://localhost:8998/reset_password?token=" + token;
+			sendEmail(email, resetPasswordLink);
+//			model.addAttribute("message", "");
+
+		} catch (UsernameNotFoundException ex) {
+			return ResponseEntity.ok(new MessageResponse(ex.getMessage()));
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(e.getMessage()));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(e.getMessage()));
+		}
+
+		return ResponseEntity.ok(new MessageResponse("Send mail successfully!"));
+
+	}
+
+	public void sendEmail(String recipientEmail, String link) throws MessagingException, UnsupportedEncodingException {
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		helper.setFrom("social@gmail.com", "Social Support");
+		helper.setTo(recipientEmail);
+
+		String subject = "Here's the link to reset your password";
+
+		String content = "<p>Hello,</p>"
+				+ "<p>You have requested to reset your password.</p>"
+				+ "<p>Click the link below to change your password:</p>"
+				+ "<p><a href=\"" + link + "\">Change my password</a></p>"
+				+ "<br>"
+				+ "<p>Ignore this email if you do remember your password, "
+				+ "or you have not made the request.</p>";
+
+		helper.setSubject(subject);
+
+		helper.setText(content, true);
+
+		mailSender.send(message);
 	}
 }

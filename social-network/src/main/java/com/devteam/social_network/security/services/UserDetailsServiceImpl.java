@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,5 +23,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		return UserDetailsImpl.build(user);
 	}
+
+	public void updateResetPasswordToken(String token, String email) throws UsernameNotFoundException {
+		User customer = userRepository.findByEmail(email);
+		if (customer != null) {
+			customer.setResetPasswordToken(token);
+			userRepository.save(customer);
+		} else {
+			throw new UsernameNotFoundException("Could not find any customer with the email " + email);
+		}
+	}
+
 
 }

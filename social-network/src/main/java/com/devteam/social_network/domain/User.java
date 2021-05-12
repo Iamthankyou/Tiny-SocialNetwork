@@ -44,6 +44,9 @@ public class User {
 	@Column(name = "Gender")
 	private String gender;
 
+	@Column(name = "reset_password_token")
+	private String resetPasswordToken;
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(	name = "user_roles", 
 				joinColumns = @JoinColumn(name = "user_id"), 
@@ -60,6 +63,14 @@ public class User {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.gender = gender;
+	}
+
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
 	}
 
 	public Long getId() {
