@@ -3,10 +3,16 @@ package com.devteam.social_network.service.impl;
 import com.devteam.social_network.common.exception.AppException;
 import com.devteam.social_network.domain.Post;
 import com.devteam.social_network.domain.PostReaction;
+import com.devteam.social_network.repos.PostRepoService;
 import com.devteam.social_network.sdi.PostSdi;
+import com.devteam.social_network.sdo.PostCustomSdo;
 import com.devteam.social_network.sdo.PostSdo;
 import com.devteam.social_network.service.*;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,6 +29,8 @@ public class PostServiceCustomImpl implements PostServiceCustom {
     MediaService mediaService;
     @Autowired
     PostReactionService postReactionService;
+    @Autowired
+    PostRepoService postRepoService;
     @Override
     public PostSdo post(PostSdi postSdi) {
         if (accountServiceCustom.getAccountByEmail(postSdi.getUserEmail()) == null){
@@ -61,6 +69,15 @@ public class PostServiceCustomImpl implements PostServiceCustom {
         return postSdo;
     }
 
+    @Override
+    public Page<PostCustomSdo> listPost(Pageable pageable) {
+        return postRepoService.listPost(pageable);
+    }
+
+    @Override
+    public Page<Post> listPostVer2(int pageIndex, int size) {
+        return postService.findAll(PageRequest.of(pageIndex,size));
+    }
 
 
 }

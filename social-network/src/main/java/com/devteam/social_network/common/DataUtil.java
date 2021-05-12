@@ -21,9 +21,12 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.security.MessageDigest;
+import java.sql.Time;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -53,8 +56,8 @@ public class DataUtil {
                 Class t = f.getType();
 
                 System.out.println(objects[i]);
-                System.out.println(objects[i].getClass());
-                System.out.println(t.getName());
+                System.out.println("object-->"+objects[i].getClass());
+                System.out.println("t-->"+t.getName());
                 if (objects[i] == null) continue;
                 if ("java.lang.String".equals(t.getName())) {
                     if (objects[i] instanceof String || objects[i] instanceof Long){
@@ -71,6 +74,14 @@ public class DataUtil {
                     f.set(object,DataUtil.safeToDate(objects[i]));
                 } else if ("java.lang.Float".equals(t.getName())||"float".equals(t.getName())){
                     f.set(object,DataUtil.safeToFloat(objects[i]));
+                } else if ("java.sql.LocalDate".equals(t.getName())){
+                    f.set(object,DataUtil.safeToLocalDate(objects[i]));
+                } else if ("java.time.LocalTime".equals(t.getName())){
+                    f.set(object,DataUtil.safeToLocalTime(objects[i]));
+                } else if("java.sql.Date".equals(t.getName())){
+                    f.set(object,DataUtil.safeToSqlDate(objects[i]));
+                } else if ("java.sql.Time".equals(t.getName())){
+                    f.set(object,DataUtil.safeToSqlTime(objects[i]));
                 }
             }
 
@@ -415,6 +426,34 @@ public class DataUtil {
             return null;
         }
         return (Date)obj1;
+    }
+
+    public static LocalDate safeToLocalDate(Object obj1){
+        if (obj1 == null) {
+            return null;
+        }
+        return (LocalDate) obj1;
+    }
+
+    public static LocalTime safeToLocalTime(Object obj1){
+        if (obj1 == null) {
+            return null;
+        }
+        return (LocalTime)obj1;
+    }
+
+    public static java.sql.Date safeToSqlDate(Object obj1){
+        if (obj1 == null) {
+            return null;
+        }
+        return (java.sql.Date) obj1;
+    }
+
+    public static Time safeToSqlTime(Object obj1){
+        if (obj1 == null) {
+            return null;
+        }
+        return (Time) obj1;
     }
 
     /**

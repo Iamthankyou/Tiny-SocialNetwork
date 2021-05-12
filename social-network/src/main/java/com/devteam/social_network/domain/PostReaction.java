@@ -15,6 +15,7 @@ public class PostReaction {
     private String userEmail;
     @Id
     @Column(name = "POSTID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
     @Column(name = "REACTIONTYPE")
     private String reationType;
