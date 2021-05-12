@@ -12,7 +12,7 @@ import java.util.List;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 @Getter
 @Setter
-public abstract class AppException extends ServiceBadException {
+public class AppException extends ServiceBadException {
 
     String errorCode;
     String message;

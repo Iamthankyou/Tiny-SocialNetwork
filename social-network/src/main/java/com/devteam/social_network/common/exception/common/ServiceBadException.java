@@ -9,7 +9,9 @@ public abstract class ServiceBadException extends ServiceException{
         super(message, cause);
     }
 
-    public int getHttpCodeError(){
+    @Override
+    public int getHttpErrorCode() {
         return 400;
     }
+
 }
