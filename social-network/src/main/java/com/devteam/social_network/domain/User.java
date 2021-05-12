@@ -44,6 +44,15 @@ public class User {
 	@Column(name = "Gender")
 	private String gender;
 
+	@Column(name = "reset_password_token")
+	private String resetPasswordToken;
+
+	@Column(name = "is_active")
+	private String isActive;
+
+	@Column(name = "avatar")
+	private String avatar;
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(	name = "user_roles", 
 				joinColumns = @JoinColumn(name = "user_id"), 
@@ -60,6 +69,30 @@ public class User {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.gender = gender;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public String getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(String isActive) {
+		this.isActive = isActive;
+	}
+
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
 	}
 
 	public Long getId() {
