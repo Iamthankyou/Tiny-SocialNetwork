@@ -206,7 +206,9 @@ public class AuthController {
 
 		try {
 			forgotService.updateResetPasswordToken(token, email);
-			String resetPasswordLink =  "http://localhost:8998/api/auth/reset_password?token=" + token;
+//			String resetPasswordLink =  "http://localhost:8998/api/auth/reset_password?token=" + token;
+
+			String resetPasswordLink =  "http://localhost:8080/reset_password?token=" + token;
 			sendEmail(email, resetPasswordLink);
 //			model.addAttribute("message", "");
 
