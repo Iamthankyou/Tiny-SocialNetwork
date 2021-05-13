@@ -38,4 +38,17 @@ public class UploadFileServiceImpl implements UploadFileService {
         }
         return result;
     }
+
+    @Override
+    public String uploadFileForChat(MultipartFile multipartFile) {
+        String root = "http://localhost:8998/upload-file-controller/images/";
+        Path path = Paths.get("upload/");
+        try {
+            InputStream inputStream = multipartFile.getInputStream();
+            Files.copy(inputStream,path.resolve(multipartFile.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new AppException("APIUL2","Can't upload");
+        }
+        return root+multipartFile.getOriginalFilename();
+    }
 }

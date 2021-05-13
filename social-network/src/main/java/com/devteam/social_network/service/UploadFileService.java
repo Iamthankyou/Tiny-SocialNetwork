@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface UploadFileService {
     public List<String> uploadFile(MultipartFile[] multipartFileList);
+
+    public String uploadFileForChat(MultipartFile multipartFile);
 }

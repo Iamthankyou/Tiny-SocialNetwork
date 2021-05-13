@@ -39,6 +39,11 @@ public class UploadFileController {
         return ResponseEntity.status(HttpStatus.OK).body(uploadFileService.uploadFile(multipartFile));
     }
 
+    public ResponseEntity<String> uploadFileForChat(@RequestParam("files") MultipartFile multipartFile,@RequestParam Long messageId){
+        String root = "http://localhost:8998/upload-file-controller/images/";
+        return ResponseEntity.status(HttpStatus.OK).body(uploadFileService.uploadFileForChat(multipartFile));
+    }
+
     @GetMapping("images/{photo}")
     public ResponseEntity<ByteArrayResource> getImage(@PathVariable("photo")String photo){
         if(!photo.equals("") || photo != null){
