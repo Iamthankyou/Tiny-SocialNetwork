@@ -10,6 +10,10 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/file")
@@ -25,20 +30,33 @@ public class AvatarController {
     AvatarService avatarService;
 
     @Autowired
+    AuthenticationManager authenticationManager;
+
+
+    @Autowired
     UserRepository userRepository;
 
     @PostMapping("upload-file")
     @ApiOperation("upload-file")
-    public ResponseEntity<List<String>> uploadFile(@RequestParam("files") MultipartFile[] multipartFile,@RequestParam String email){
+    public ResponseEntity<List<String>> uploadFile(@RequestParam("files") MultipartFile[] multipartFile, @RequestHeader (name="Authorization") String token){
         String root = "http://localhost:8998/file/images/";
-        User user = userRepository.findByEmail(email);
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
+
+        UserDetails userDetail = (UserDetails) authentication.getPrincipal();
+
+        Optional<User> user = userRepository.findByNickName(userDetail.getUsername());
+
+
+        System.out.print(userDetail.getUsername());
+        System.out.print("???");
 
         if (user != null){
             for (int i = 0 ; i < multipartFile.length ; i++){
-                user.setAvatar(root+multipartFile[i].getOriginalFilename());
+                user.get().setAvatar(root+multipartFile[i].getOriginalFilename());
             }
 
-            userRepository.save(user);
+            userRepository.save(user.get());
             return ResponseEntity.status(HttpStatus.OK).body(avatarService.uploadFile(multipartFile));
 
         }
