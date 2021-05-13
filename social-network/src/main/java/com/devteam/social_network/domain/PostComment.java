@@ -10,18 +10,17 @@ import java.time.LocalTime;
 @Entity
 @Data
 @Table(name = "POST_COMMENT")
-@IdClass(PostCommentCompositeKey.class)
 public class PostComment {
     @Id
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
     @Column(name = "POSTID")
     private Long postId;
-    //@Id
     @Column(name = "COMMENTTIME",columnDefinition = "TIME")
     private LocalTime commentTime;
-    //@Id
     @Column(name = "COMMENTDATE",columnDefinition = "DATE")
     private LocalDate commentDate;
-    @Id
     @Column(name = "USEREMAIL")
     private String userEmail;
     @Column(name = "CONTENT")
