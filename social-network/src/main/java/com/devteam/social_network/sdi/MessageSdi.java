@@ -6,4 +6,5 @@ import lombok.Data;
 public class MessageSdi {
     private String from;
     private String text;
+    private Long postId;
 }
