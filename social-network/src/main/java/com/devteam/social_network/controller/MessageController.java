@@ -47,6 +47,7 @@ public class MessageController {
         message.setThreadId(messageInfoSdi.getThreadId());
         message.setSender(messageInfoSdi.getSender());
         message.setCreateAt(new Date());
+        message.setUpdateAt(new Date());
         message.setType(messageInfoSdi.getType());
         message.setContent(messageInfoSdi.getContent());
         if ("heart".equals(messageInfoSdi.getType().trim().toLowerCase())){
