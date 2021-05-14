@@ -95,19 +95,13 @@ public class MessageThreadController {
         threadParticipant.setThreadId(messageThread.getThreadId());
         threadParticipant.setUserEmail(createThreadMessageSdi.getUserEmail());
         threadParticipant = threadParticipantService.save(threadParticipant);
-
-        Account account = accountServiceCustom.getAccountByEmail(threadParticipant.getUserEmail());
+        
         CreateThreadMessageSdo createThreadMessageSdo = new CreateThreadMessageSdo();
         createThreadMessageSdo.setCreateAt(messageThread.getCreateAt());
         createThreadMessageSdo.setOwnerEmail(messageThread.getOwnerEmail());
         createThreadMessageSdo.setThreadId(messageThread.getThreadId());
         createThreadMessageSdo.setUpdateAt(messageThread.getUpdateAt());
         createThreadMessageSdo.setUserEmail(threadParticipant.getUserEmail());
-        createThreadMessageSdo.setAvatar(account.getAvatar());
-        createThreadMessageSdo.setFirstName(account.getFirstName());
-        createThreadMessageSdo.setLastName(account.getLastName());
-        createThreadMessageSdo.setNickName(account.getNickName());
-
         return ResponseEntity.status(HttpStatus.OK).body(createThreadMessageSdo);
     }
 

@@ -14,4 +14,7 @@ public class ConversationSdo {
     private Date updateAt;
     private List<String> listUserEmail;
     private Long total;
+    private String avatar;
+    private String firstName;
+    private String lastName;
 }

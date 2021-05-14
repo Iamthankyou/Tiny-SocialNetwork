@@ -1,17 +1,11 @@
 package com.devteam.social_network.service.impl;
 
-import com.devteam.social_network.domain.Message;
-import com.devteam.social_network.domain.MessageThread;
-import com.devteam.social_network.domain.Post;
-import com.devteam.social_network.domain.ThreadParticipant;
+import com.devteam.social_network.domain.*;
 import com.devteam.social_network.repos.MessageThreadRepoService;
 import com.devteam.social_network.sdo.ConversationInfoSdo;
 import com.devteam.social_network.sdo.ConversationSdo;
 import com.devteam.social_network.sdo.MessageInfoSdo;
-import com.devteam.social_network.service.MessageService;
-import com.devteam.social_network.service.MessageThreadCustomService;
-import com.devteam.social_network.service.MessageThreadService;
-import com.devteam.social_network.service.ThreadParticipantService;
+import com.devteam.social_network.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -31,6 +25,8 @@ public class MessageThreadCustomServiceImpl implements MessageThreadCustomServic
     MessageService messageService;
     @Autowired
     ThreadParticipantService threadParticipantService;
+    @Autowired
+    AccountServiceCustom accountServiceCustom;
     @Override
     public List<MessageInfoSdo> getListMessageOfThreadMessage(Long threadId) {
         return messageThreadRepoService.getListMessageOfThreadMessage(threadId);
@@ -65,6 +61,10 @@ public class MessageThreadCustomServiceImpl implements MessageThreadCustomServic
             conversationSdo.setLastMessage(lastMessage);
             conversationSdo.setThreadId(l.getThreadId());
             conversationSdo.setUpdateAt(l.getUpdateAt());
+            Account account = accountServiceCustom.getAccountByEmail(listUser.get(0));
+            conversationSdo.setAvatar(account.getAvatar());
+            conversationSdo.setFirstName(account.getFirstName());
+            conversationSdo.setLastName(account.getLastName());
             result.add(conversationSdo);
         });
 
@@ -94,6 +94,10 @@ public class MessageThreadCustomServiceImpl implements MessageThreadCustomServic
             conversationSdo.setLastMessage(lastMessage);
             conversationSdo.setThreadId(messageThread.getThreadId());
             conversationSdo.setUpdateAt(messageThread.getUpdateAt());
+            Account account = accountServiceCustom.getAccountByEmail(listUser.get(0));
+            conversationSdo.setAvatar(account.getAvatar());
+            conversationSdo.setFirstName(account.getFirstName());
+            conversationSdo.setLastName(account.getLastName());
             result.add(conversationSdo);
         });
         ConversationInfoSdo conversationInfoSdo = new ConversationInfoSdo();
