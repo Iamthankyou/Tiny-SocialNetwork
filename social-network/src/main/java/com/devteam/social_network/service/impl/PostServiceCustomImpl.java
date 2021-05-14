@@ -41,6 +41,8 @@ public class PostServiceCustomImpl implements PostServiceCustom {
     PostCommentService postCommentService;
     @Autowired
     LoveService loveService;
+    @Autowired
+    AccountService accountService;
     @Override
     public PostSdo post(PostSdi postSdi) {
         if (accountServiceCustom.getAccountByEmail(postSdi.getUserEmail()) == null){

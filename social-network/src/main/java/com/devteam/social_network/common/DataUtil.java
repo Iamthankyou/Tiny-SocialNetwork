@@ -56,7 +56,7 @@ public class DataUtil {
                 Class t = f.getType();
 
                 System.out.println(objects[i]);
-                System.out.println("object-->"+objects[i].getClass());
+                //System.out.println("object-->"+objects[i].getClass());
                 System.out.println("t-->"+t.getName());
                 if (objects[i] == null) continue;
                 if ("java.lang.String".equals(t.getName())) {
