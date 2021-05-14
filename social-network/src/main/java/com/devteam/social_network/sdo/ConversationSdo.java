@@ -3,6 +3,7 @@ package com.devteam.social_network.sdo;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class ConversationSdo {
@@ -11,4 +12,5 @@ public class ConversationSdo {
     private Long threadId;
     private Date createAt;
     private Date updateAt;
+    private List<String> listUserEmail;
 }

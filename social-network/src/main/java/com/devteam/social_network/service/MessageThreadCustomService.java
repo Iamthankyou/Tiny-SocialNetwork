@@ -8,5 +8,5 @@ import java.util.List;
 public interface MessageThreadCustomService {
 
     public List<MessageInfoSdo> getListMessageOfThreadMessage(Long threadId);
-    public List<ConversationSdo> getListConversaiont(int pageIndex,int size);
+    public List<ConversationSdo> getListConversaiont(String userEmail,int pageIndex,int size);
 }
