@@ -191,6 +191,7 @@ public class AuthController {
 		System.out.print(username.getUsername());
 		Optional<User> user = userRepository.findByNickName(username.getUsername());
 		return ResponseEntity.ok(user.get());
+		// PUSH
 	}
 
 	@PostMapping("/forgot")
