@@ -114,7 +114,7 @@ public class MessageThreadController {
 
     @GetMapping("/get-list-conversation")
     @ApiOperation("get-list-conversation")
-    public ResponseEntity<List<ConversationSdo>> getListConversation(@RequestParam Long threadId,@RequestParam int pageIndex, @RequestParam int size){
-        return ResponseEntity.status(HttpStatus.OK).body(messageThreadCustomService.getListConversaiont(threadId,pageIndex,size));
+    public ResponseEntity<List<ConversationSdo>> getListConversation(@RequestParam int pageIndex, @RequestParam int size){
+        return ResponseEntity.status(HttpStatus.OK).body(messageThreadCustomService.getListConversaiont(pageIndex,size));
     }
 }

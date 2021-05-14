@@ -1,5 +1,6 @@
 package com.devteam.social_network.service.impl;
 
+import com.devteam.social_network.domain.Message;
 import com.devteam.social_network.domain.MessageThread;
 import com.devteam.social_network.domain.Post;
 import com.devteam.social_network.repos.MessageThreadRepoService;
@@ -31,12 +32,13 @@ public class MessageThreadCustomServiceImpl implements MessageThreadCustomServic
     }
 
     @Override
-    public List<ConversationSdo> getListConversaiont(Long threadId, int pageIndex, int size) {
+    public List<ConversationSdo> getListConversaiont(int pageIndex, int size) {
         List<ConversationSdo> result = new ArrayList<>();
         List<MessageThread> list = messageThreadService.findAll(PageRequest.of(pageIndex,size, Sort.by("updateAt").descending())).toList();
         list.forEach(l -> {
             ConversationSdo conversationSdo = new ConversationSdo();
-            String lastMessage = messageService.findAll().stream().filter(ms -> ms.getThreadId() == l.getThreadId())
+            String lastMessage = "";
+            List<Message> messageList = messageService.findAll().stream().filter(ms -> ms.getThreadId() == l.getThreadId())
                     .sorted((o1,o2) ->{
                         if (o1.getUpdateAt().after(o2.getUpdateAt())){
                             return -1;
@@ -45,7 +47,10 @@ public class MessageThreadCustomServiceImpl implements MessageThreadCustomServic
                             return 1;
                         }
                         return 0;
-                    }).collect(Collectors.toList()).get(0).getUpdateAt().toString();
+                    }).collect(Collectors.toList());
+            if(messageList.size() > 0 ){
+                lastMessage = messageList.get(0).getContent();
+            }
             conversationSdo.setCreateAt(l.getCreateAt());
             conversationSdo.setLastMessage(lastMessage);
             conversationSdo.setThreadId(l.getThreadId());
