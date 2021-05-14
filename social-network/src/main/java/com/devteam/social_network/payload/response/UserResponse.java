@@ -7,14 +7,24 @@ public class UserResponse {
     private String lastName;
     private String isActive;
     private String gender;
+    private String avatar;
 
-    public UserResponse(String username, String email, String firstName, String lastName, String isActive, String gender) {
+    public UserResponse(String username, String email, String firstName, String lastName, String isActive, String gender, String avatar) {
         this.username = username;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.isActive = isActive;
         this.gender = gender;
+        this.avatar = avatar;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getUsername() {
