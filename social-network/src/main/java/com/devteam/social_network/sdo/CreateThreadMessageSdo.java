@@ -12,4 +12,8 @@ public class CreateThreadMessageSdo {
     private Date createAt;
     private Date updateAt;
     private String userEmail;
+    private String avatar;
+    private String firstName;
+    private String lastName;
+    private String nickName;
 }

@@ -1,5 +1,6 @@
 package com.devteam.social_network.controller;
 
+import com.devteam.social_network.domain.Account;
 import com.devteam.social_network.domain.MessageThread;
 import com.devteam.social_network.domain.ThreadParticipant;
 import com.devteam.social_network.sdi.CreateThreadMessageSdi;
@@ -8,12 +9,8 @@ import com.devteam.social_network.sdo.ConversationInfoSdo;
 import com.devteam.social_network.sdo.ConversationSdo;
 import com.devteam.social_network.sdo.CreateThreadMessageSdo;
 import com.devteam.social_network.sdo.MessageInfoSdo;
-import com.devteam.social_network.service.MessageThreadCustomService;
-import com.devteam.social_network.service.MessageThreadService;
-import com.devteam.social_network.service.ThreadParticipantService;
-import com.sun.jmx.snmp.tasks.ThreadService;
+import com.devteam.social_network.service.*;
 import io.swagger.annotations.ApiOperation;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +32,9 @@ public class MessageThreadController {
 
     @Autowired
     MessageThreadCustomService messageThreadCustomService;
+
+    @Autowired
+    AccountServiceCustom accountServiceCustom;
 
     @PostMapping("/insert-message-thread")
     @ApiOperation("insert-message-thread")
@@ -96,12 +96,17 @@ public class MessageThreadController {
         threadParticipant.setUserEmail(createThreadMessageSdi.getUserEmail());
         threadParticipant = threadParticipantService.save(threadParticipant);
 
+        Account account = accountServiceCustom.getAccountByEmail(threadParticipant.getUserEmail());
         CreateThreadMessageSdo createThreadMessageSdo = new CreateThreadMessageSdo();
         createThreadMessageSdo.setCreateAt(messageThread.getCreateAt());
         createThreadMessageSdo.setOwnerEmail(messageThread.getOwnerEmail());
         createThreadMessageSdo.setThreadId(messageThread.getThreadId());
         createThreadMessageSdo.setUpdateAt(messageThread.getUpdateAt());
         createThreadMessageSdo.setUserEmail(threadParticipant.getUserEmail());
+        createThreadMessageSdo.setAvatar(account.getAvatar());
+        createThreadMessageSdo.setFirstName(account.getFirstName());
+        createThreadMessageSdo.setLastName(account.getLastName());
+        createThreadMessageSdo.setNickName(account.getNickName());
 
         return ResponseEntity.status(HttpStatus.OK).body(createThreadMessageSdo);
     }
