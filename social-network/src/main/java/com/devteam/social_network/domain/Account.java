@@ -24,6 +24,6 @@ public class Account {
     private String password;
     @Column(name = "GENDER")
     private String gender;
-    @Column(name = "avartar")
+    @Column(name = "AVATAR")
     private String avatar;
 }

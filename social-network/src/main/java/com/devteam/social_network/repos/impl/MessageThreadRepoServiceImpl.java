@@ -20,8 +20,8 @@ public class MessageThreadRepoServiceImpl implements MessageThreadRepoService {
     public List<MessageInfoSdo> getListMessageOfThreadMessage(Long threadId) {
         List<MessageInfoSdo> result = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT MESSAGE.ThreadID,MESSAGE.MessageId,Content,CreateAt,UpdateAt,Type,FileName ");
-        sql.append(" FROM MESSAGE LEFT JOIN MessageMedia ON MESSAGE.MessageId = MessageMedia.MessageMediaId ");
+        sql.append(" SELECT MESSAGE.ThreadID,MESSAGE.MessageId,Content,CreateAt,UpdateAt,Type ");
+        sql.append(" FROM MESSAGE ");
         sql.append(" WHERE MESSAGE.ThreadID = :threadId ");
         Query query = em.createNativeQuery(sql.toString());
         query.setParameter("threadId",threadId);

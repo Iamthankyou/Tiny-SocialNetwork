@@ -41,6 +41,7 @@ public class MessageThreadController {
     public ResponseEntity<MessageThread> insertMessageThread(@RequestBody MessageThreadSdi messageThreadSdi){
         MessageThread messageThread = new MessageThread();
         messageThread.setCreateAt(new Date());
+        messageThread.setUpdateAt(new Date());
         messageThread.setOwnerEmail(messageThreadSdi.getOwnerEmail());
         return ResponseEntity.status(HttpStatus.OK).body(messageThreadService.save(messageThread));
     }
@@ -95,7 +96,7 @@ public class MessageThreadController {
         threadParticipant.setThreadId(messageThread.getThreadId());
         threadParticipant.setUserEmail(createThreadMessageSdi.getUserEmail());
         threadParticipant = threadParticipantService.save(threadParticipant);
-        
+
         CreateThreadMessageSdo createThreadMessageSdo = new CreateThreadMessageSdo();
         createThreadMessageSdo.setCreateAt(messageThread.getCreateAt());
         createThreadMessageSdo.setOwnerEmail(messageThread.getOwnerEmail());

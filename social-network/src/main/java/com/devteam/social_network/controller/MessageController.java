@@ -3,12 +3,14 @@ package com.devteam.social_network.controller;
 
 import com.devteam.social_network.domain.Message;
 import com.devteam.social_network.domain.MessageInfoSdi;
+import com.devteam.social_network.domain.MessageThread;
 import com.devteam.social_network.domain.PostComment;
 import com.devteam.social_network.sdi.MessageSdi;
 import com.devteam.social_network.sdi.PostCommentSdi;
 import com.devteam.social_network.sdo.MessageInfoSdo;
 import com.devteam.social_network.sdo.MessageSdo;
 import com.devteam.social_network.service.MessageService;
+import com.devteam.social_network.service.MessageThreadService;
 import com.devteam.social_network.service.PostCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -25,6 +27,9 @@ public class MessageController {
 
     @Autowired
     PostCommentService postCommentService;
+
+    @Autowired
+    MessageThreadService messageThreadService;
 
     @Autowired
     MessageService messageService;
@@ -50,6 +55,9 @@ public class MessageController {
         message.setUpdateAt(new Date());
         message.setType(messageInfoSdi.getType());
         message.setContent(messageInfoSdi.getContent());
+        MessageThread messageThread = messageThreadService.findById(message.getThreadId()).orElse(null);
+        messageThread.setUpdateAt(message.getUpdateAt());
+        messageThreadService.save(messageThread);
         if ("heart".equals(messageInfoSdi.getType().trim().toLowerCase())){
             message.setContent("https://bit.ly/33DzUKs");
         }
