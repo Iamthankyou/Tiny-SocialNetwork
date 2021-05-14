@@ -4,6 +4,7 @@ import com.devteam.social_network.domain.*;
 import com.devteam.social_network.repos.MessageThreadRepoService;
 import com.devteam.social_network.sdo.ConversationInfoSdo;
 import com.devteam.social_network.sdo.ConversationSdo;
+import com.devteam.social_network.sdo.ListMessageInfoSdo;
 import com.devteam.social_network.sdo.MessageInfoSdo;
 import com.devteam.social_network.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class MessageThreadCustomServiceImpl implements MessageThreadCustomServic
     @Autowired
     AccountServiceCustom accountServiceCustom;
     @Override
-    public List<MessageInfoSdo> getListMessageOfThreadMessage(Long threadId) {
+    public ListMessageInfoSdo getListMessageOfThreadMessage(Long threadId) {
         return messageThreadRepoService.getListMessageOfThreadMessage(threadId);
     }
 

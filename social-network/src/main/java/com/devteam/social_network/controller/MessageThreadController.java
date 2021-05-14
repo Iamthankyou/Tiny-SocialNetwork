@@ -5,10 +5,7 @@ import com.devteam.social_network.domain.MessageThread;
 import com.devteam.social_network.domain.ThreadParticipant;
 import com.devteam.social_network.sdi.CreateThreadMessageSdi;
 import com.devteam.social_network.sdi.MessageThreadSdi;
-import com.devteam.social_network.sdo.ConversationInfoSdo;
-import com.devteam.social_network.sdo.ConversationSdo;
-import com.devteam.social_network.sdo.CreateThreadMessageSdo;
-import com.devteam.social_network.sdo.MessageInfoSdo;
+import com.devteam.social_network.sdo.*;
 import com.devteam.social_network.service.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,7 +106,7 @@ public class MessageThreadController {
 
     @GetMapping("/get-list-message")
     @ApiOperation("get-list-message")
-    public ResponseEntity<List<MessageInfoSdo>> getListMessageOfThreadMessage(@RequestParam Long threadId){
+    public ResponseEntity<ListMessageInfoSdo> getListMessageOfThreadMessage(@RequestParam Long threadId){
         return ResponseEntity.status(HttpStatus.OK).body(messageThreadCustomService.getListMessageOfThreadMessage(threadId));
     }
 
