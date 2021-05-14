@@ -29,8 +29,15 @@ public class MessageThreadCustomServiceImpl implements MessageThreadCustomServic
     @Autowired
     AccountServiceCustom accountServiceCustom;
     @Override
-    public ListMessageInfoSdo getListMessageOfThreadMessage(Long threadId) {
-        return messageThreadRepoService.getListMessageOfThreadMessage(threadId);
+    public ListMessageInfoSdo getListMessageOfThreadMessage(Long threadId,int pageIndex,int size) {
+        ListMessageInfoSdo listMessageInfoSdo = messageThreadRepoService.getListMessageOfThreadMessage(threadId);
+        List<Message> messagePageable = messageService.findAll(PageRequest.of(pageIndex,size, Sort.by("updateAt").descending())).stream().collect(Collectors.toList());
+        List<MessageInfoSdo> messageInfoSdoList = listMessageInfoSdo.getMessageInfoSdoList();
+        messageInfoSdoList = messageInfoSdoList.stream().filter(mis -> {
+            return messagePageable.stream().anyMatch(mp -> mp.getMessageId()==mis.getMessageId());
+        }).collect(Collectors.toList());
+        listMessageInfoSdo.setMessageInfoSdoList(messageInfoSdoList);
+        return listMessageInfoSdo;
     }
 
     @Override

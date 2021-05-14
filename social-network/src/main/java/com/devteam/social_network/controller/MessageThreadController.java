@@ -106,8 +106,8 @@ public class MessageThreadController {
 
     @GetMapping("/get-list-message")
     @ApiOperation("get-list-message")
-    public ResponseEntity<ListMessageInfoSdo> getListMessageOfThreadMessage(@RequestParam Long threadId){
-        return ResponseEntity.status(HttpStatus.OK).body(messageThreadCustomService.getListMessageOfThreadMessage(threadId));
+    public ResponseEntity<ListMessageInfoSdo> getListMessageOfThreadMessage(@RequestParam Long threadId,int pageIndex,int size){
+        return ResponseEntity.status(HttpStatus.OK).body(messageThreadCustomService.getListMessageOfThreadMessage(threadId,pageIndex,size));
     }
 
     @GetMapping("/get-list-conversation")
