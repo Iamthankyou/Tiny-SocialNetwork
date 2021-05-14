@@ -12,5 +12,6 @@ public class MessageInfoSdo {
     private Date createAt;
     private Date updateAt;
     private String type;
-    private String filename;
+    private String sender;
+    private String avatar;
 }
