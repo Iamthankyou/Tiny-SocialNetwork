@@ -4,6 +4,7 @@ import com.devteam.social_network.domain.MessageThread;
 import com.devteam.social_network.domain.ThreadParticipant;
 import com.devteam.social_network.sdi.CreateThreadMessageSdi;
 import com.devteam.social_network.sdi.MessageThreadSdi;
+import com.devteam.social_network.sdo.ConversationInfoSdo;
 import com.devteam.social_network.sdo.ConversationSdo;
 import com.devteam.social_network.sdo.CreateThreadMessageSdo;
 import com.devteam.social_network.sdo.MessageInfoSdo;
@@ -114,7 +115,7 @@ public class MessageThreadController {
 
     @GetMapping("/get-list-conversation")
     @ApiOperation("get-list-conversation")
-    public ResponseEntity<List<ConversationSdo>> getListConversation(@RequestParam String userEmail,@RequestParam int pageIndex, @RequestParam int size){
+    public ResponseEntity<ConversationInfoSdo> getListConversation(@RequestParam String userEmail, @RequestParam int pageIndex, @RequestParam int size){
         return ResponseEntity.status(HttpStatus.OK).body(messageThreadCustomService.getListConversaiont(userEmail,pageIndex,size));
     }
 }

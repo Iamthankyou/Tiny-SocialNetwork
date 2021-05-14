@@ -5,6 +5,7 @@ import com.devteam.social_network.domain.MessageThread;
 import com.devteam.social_network.domain.Post;
 import com.devteam.social_network.domain.ThreadParticipant;
 import com.devteam.social_network.repos.MessageThreadRepoService;
+import com.devteam.social_network.sdo.ConversationInfoSdo;
 import com.devteam.social_network.sdo.ConversationSdo;
 import com.devteam.social_network.sdo.MessageInfoSdo;
 import com.devteam.social_network.service.MessageService;
@@ -36,7 +37,7 @@ public class MessageThreadCustomServiceImpl implements MessageThreadCustomServic
     }
 
     @Override
-    public List<ConversationSdo> getListConversaiont(String useEmail,int pageIndex, int size) {
+    public ConversationInfoSdo getListConversaiont(String useEmail, int pageIndex, int size) {
         List<ConversationSdo> result = new ArrayList<>();
      List<MessageThread> list = messageThreadService.findAll(PageRequest.of(pageIndex,size, Sort.by("updateAt").descending()))
              .filter(mts -> mts.getOwnerEmail().equals(useEmail)).toList();
@@ -95,6 +96,9 @@ public class MessageThreadCustomServiceImpl implements MessageThreadCustomServic
             conversationSdo.setUpdateAt(messageThread.getUpdateAt());
             result.add(conversationSdo);
         });
-        return result;
+        ConversationInfoSdo conversationInfoSdo = new ConversationInfoSdo();
+        conversationInfoSdo.setConversationSdoList(result);
+        conversationInfoSdo.setTotal(result.size());
+        return conversationInfoSdo;
     }
 }

@@ -13,4 +13,5 @@ public class ConversationSdo {
     private Date createAt;
     private Date updateAt;
     private List<String> listUserEmail;
+    private Long total;
 }

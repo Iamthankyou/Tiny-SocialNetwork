@@ -20,4 +20,5 @@ public class PagePost {
     private List<String> listLove;
     private List<Media> listMedia;
     private Long totalPost;
+    private Long userId;
 }
