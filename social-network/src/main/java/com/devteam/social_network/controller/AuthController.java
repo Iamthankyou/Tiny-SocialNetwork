@@ -3,6 +3,7 @@ package com.devteam.social_network.controller;
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,10 +14,7 @@ import javax.validation.Valid;
 import com.devteam.social_network.domain.ERole;
 import com.devteam.social_network.domain.Role;
 import com.devteam.social_network.domain.User;
-import com.devteam.social_network.payload.request.ForgotRequest;
-import com.devteam.social_network.payload.request.LoginRequest;
-import com.devteam.social_network.payload.request.NewPassword;
-import com.devteam.social_network.payload.request.SignupRequest;
+import com.devteam.social_network.payload.request.*;
 import com.devteam.social_network.payload.response.JwtResponse;
 import com.devteam.social_network.payload.response.MessageResponse;
 import com.devteam.social_network.payload.response.UserResponse;
@@ -25,8 +23,6 @@ import com.devteam.social_network.repos.UserRepository;
 import com.devteam.social_network.security.jwt.JwtUtils;
 import com.devteam.social_network.security.services.UserDetailsImpl;
 import com.devteam.social_network.service.ForgotService;
-import com.sun.mail.imap.Utility;
-import io.swagger.models.Response;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -186,18 +182,16 @@ public class AuthController {
 		String email = forgotRequest.getEmail();
 		User user = userRepository.findByEmail(email);
 
-		return ResponseEntity.ok(new UserResponse(user.getNickName(),user.getEmail(),user.getFirstName(), user.getLastName(), user.getIsActive(), user.getGender()));
+		return ResponseEntity.ok(new UserResponse(user.getNickName(),user.getEmail(),user.getFirstName(), user.getLastName(), user.getIsActive(), user.getGender(), user.getAvatar()));
 	}
 
 
 	@PostMapping("/getUserWithUserName")
-	public ResponseEntity<?> getUserWithUserName(@Valid @RequestBody UserResponse userResponse) {
-		String username = userResponse.getUsername();
-		User user = userRepository.findByEmail(username);
-
-		return ResponseEntity.ok(new UserResponse(user.getNickName(),user.getEmail(),user.getFirstName(), user.getLastName(), user.getIsActive(), user.getGender()));
+	public ResponseEntity<?> getUserWithUserName(@Valid @RequestBody LoginRequest username) {
+		System.out.print(username.getUsername());
+		Optional<User> user = userRepository.findByNickName(username.getUsername());
+		return ResponseEntity.ok(user.get());
 	}
-
 
 	@PostMapping("/forgot")
 	public ResponseEntity<?> forgotUser(@Valid @RequestBody ForgotRequest forgotRequest) {
